@@ -98,27 +98,24 @@ def read_file(file):
 
 @st.cache_data
 def get_sample_data():
-    """Generates a realistic sample dataset."""
-    rng = pd.date_range(end=pd.Timestamp.today(), periods=365)
+    """Generates a realistic sample dataset with a simpler structure."""
+    rng = pd.date_range(end=pd.Timestamp.today(), periods=365, freq='D')
     products = ["Beauty", "Clothing", "Electronics", "Grocery", "Home", "Tools", "Books"]
-    rows = []
-    for d in rng:
-        for p in np.random.choice(products, 3, replace=False):
-            qty = max(1, int(np.random.poisson(4)))
-            unit_price = np.random.uniform(20, 1500)
-            amt = qty * unit_price
-            rows.append({
-                "Transaction ID": np.random.randint(100000, 999999),
-                "Orderdate": d.strftime("%Y-%m-%d"),
-                "Customer ID": f"CUST{np.random.randint(1000, 9999)}",
-                "Gender": np.random.choice(["Male", "Female"]),
-                "Age": np.random.randint(18, 65),
-                "Product Category": p,
-                "Quantity": qty,
-                "Price per Unit": unit_price,
-                "Total Amount": amt
-            })
-    return pd.DataFrame(rows)
+    
+    data = {
+        "Transaction ID": np.random.randint(100000, 999999, size=len(rng)*3),
+        "Orderdate": np.tile(rng.strftime("%Y-%m-%d"), 3),
+        "Customer ID": np.random.choice([f"CUST{i}" for i in range(1000, 9999)], size=len(rng)*3),
+        "Gender": np.random.choice(["Male", "Female"], size=len(rng)*3),
+        "Age": np.random.randint(18, 65, size=len(rng)*3),
+        "Product Category": np.random.choice(products, size=len(rng)*3),
+        "Quantity": np.random.poisson(4, size=len(rng)*3) + 1,
+        "Price per Unit": np.random.uniform(20, 1500, size=len(rng)*3).round(2),
+    }
+
+    df = pd.DataFrame(data)
+    df["Total Amount"] = df["Quantity"] * df["Price per Unit"]
+    return df
 
 # ---- Data Loading Logic ----
 if uploaded_file and not use_sample:
