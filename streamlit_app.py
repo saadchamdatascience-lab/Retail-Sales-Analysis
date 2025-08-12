@@ -7,7 +7,7 @@ import io
 from datetime import datetime
 
 # Page config
-st.set_page_config(page_title="Fake Retail Insights Dashboard", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Retail Insights Dashboard", layout="wide", initial_sidebar_state="expanded")
 
 # ---- CSS / Styling ----
 st.markdown(
