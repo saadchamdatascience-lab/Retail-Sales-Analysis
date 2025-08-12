@@ -10,6 +10,7 @@ import plotly.figure_factory as ff # For heatmap
 # Optional: Import Prophet for forecasting
 try:
     from prophet import Prophet
+    from prophet.plot import plot_plotly  # <-- ADDED THIS IMPORT
     PROPHET_INSTALLED = True
 except ImportError:
     PROPHET_INSTALLED = False
